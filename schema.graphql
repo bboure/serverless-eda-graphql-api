@@ -1,0 +1,57 @@
+type Product {
+  name: String!
+  description: String
+  price: Float!
+}
+
+type Order {
+  id: ID!
+  status: OrderStatus!
+  products: [Product]!
+  total: Float!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+input ProductInput {
+  name: String!
+  quantity: Int!
+  price: Float!
+}
+
+input CreateOrderInput {
+  products: [ProductInput!]!
+}
+
+input NotifyOrderUpdatedInput {
+  id: ID!
+  status: OrderStatus!
+  updatedAt: AWSDateTime!
+}
+
+type OrderUpdated @aws_api_key @aws_iam {
+  id: ID!
+  status: OrderStatus!
+  updatedAt: AWSDateTime!
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+type Query
+
+type Mutation {
+  createOrder(input: CreateOrderInput!): Order
+  notifyOrderUpdated(input: NotifyOrderUpdatedInput!): OrderUpdated! @aws_iam
+}
+
+type Subscription {
+  onOrderUpdated(id: ID!): OrderUpdated
+    @aws_subscribe(mutations: ["notifyOrderUpdated"])
+}
