@@ -90,7 +90,7 @@ export class AppSync extends Construct {
     const policyStatement = new PolicyStatement({
       effect: Effect.ALLOW,
       actions: ['appsync:GraphQL'],
-      resources: [`${api.arn}/types/Mutation/fields/updateOrder`],
+      resources: [`${api.arn}/types/Mutation/fields/notifyOrderUpdated`],
     });
 
     const ebRuleRole = new Role(scope, 'AppSyncEventBridgeRole', {
@@ -113,13 +113,13 @@ export class AppSync extends Construct {
           arn: (api.node.defaultChild as CfnGraphQLApi).attrGraphQlEndpointArn,
           roleArn: ebRuleRole.roleArn,
           appSyncParameters: {
-            graphQlOperation: `mutation UpdateOrder($input: UpdateOrderInput!) { updateOrder(input: $input) { id status total updatedAt } }`,
+            graphQlOperation: `mutation NotifyOrderUpdated($input: NotifyOrderUpdatedInput!) { notifyOrderUpdated(input: $input) { id status updatedAt } }`,
           },
           inputTransformer: {
             inputPathsMap: {
               id: '$.detail.order.id',
               status: '$.detail.order.status',
-              updatedAt: '$.detail.order.status',
+              updatedAt: '$.detail.order.updatedAt',
             },
             inputTemplate: JSON.stringify({
               input: {
