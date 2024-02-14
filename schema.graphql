@@ -1,14 +1,12 @@
 type Product {
   name: String!
   description: String
-  price: Float!
 }
 
 type Order {
   id: ID!
   status: OrderStatus!
   products: [Product]!
-  total: Float!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -16,7 +14,6 @@ type Order {
 input ProductInput {
   name: String!
   quantity: Int!
-  price: Float!
 }
 
 input CreateOrderInput {
@@ -39,7 +36,7 @@ enum OrderStatus {
   PENDING
   PAID
   PREPARING
-  SHIPPED
+  OUT_FOR_DELIVERY
   DELIVERED
   CANCELLED
 }

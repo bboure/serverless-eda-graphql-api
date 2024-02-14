@@ -4,6 +4,7 @@ import * as appsync from 'aws-cdk-lib/aws-appsync';
 import { AppSync } from './appsync-construct';
 import { Data } from './data-construct';
 import { EventBus } from 'aws-cdk-lib/aws-events';
+import { OrderHandler } from './state-machine-construct';
 
 export class AppsyncEventBridgeStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -15,6 +16,10 @@ export class AppsyncEventBridgeStack extends cdk.Stack {
 
     new AppSync(this, 'AppSyncConstruct', {
       ordersTable: data.ordersTable,
+      eventBus,
+    });
+
+    new OrderHandler(this, 'OrderHandler', {
       eventBus,
     });
   }

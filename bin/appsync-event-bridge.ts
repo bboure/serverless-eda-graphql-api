@@ -4,4 +4,4 @@ import * as cdk from 'aws-cdk-lib';
 import { AppsyncEventBridgeStack } from '../lib/appsync-event-bridge-stack';
 
 const app = new cdk.App();
-new AppsyncEventBridgeStack(app, 'AppsyncEventBridgeStack', {});
+new AppsyncEventBridgeStack(app, 'ServerlessFood', {});

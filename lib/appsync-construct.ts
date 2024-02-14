@@ -33,7 +33,7 @@ export class AppSync extends Construct {
 
     // Define the AppSync API
     const api = new GraphqlApi(this, 'Api', {
-      name: 'E-commerce',
+      name: 'Food API',
       definition: Definition.fromFile('schema.graphql'),
       logConfig: {
         fieldLogLevel: FieldLogLevel.ALL,
@@ -106,10 +106,11 @@ export class AppSync extends Construct {
       eventBusName: eventBus.eventBusName,
       eventPattern: {
         source: ['order.processing'],
+        'detail-type': ['order.updated'],
       },
       targets: [
         {
-          id: 'myAppsyncTarget',
+          id: 'OrderUpdated',
           arn: (api.node.defaultChild as CfnGraphQLApi).attrGraphQlEndpointArn,
           roleArn: ebRuleRole.roleArn,
           appSyncParameters: {
