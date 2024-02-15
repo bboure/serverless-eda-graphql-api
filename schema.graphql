@@ -1,6 +1,6 @@
 type Product {
   name: String!
-  description: String
+  quantity: Int!
 }
 
 type Order {

@@ -1,10 +1,14 @@
 import { Construct } from 'constructs';
-import { EventBus, Rule, RuleTargetInput } from 'aws-cdk-lib/aws-events';
+import {
+  EventBus,
+  EventField,
+  Rule,
+  RuleTargetInput,
+} from 'aws-cdk-lib/aws-events';
 import {
   Chain,
   DefinitionBody,
   Pass,
-  Result,
   StateMachine,
   TaskInput,
   Wait,
@@ -28,7 +32,7 @@ export class OrderHandler extends Construct {
 
     this.eventBus = eventBus;
 
-    const chain = Chain.start(this.createWait('Payment', 5))
+    const chain = Chain.start(this.createWait('Payment', 30))
       .next(this.createUpdateOrder('PAID'))
       .next(this.createNotifyUpdate('Paid'))
       .next(this.createWait('Confirmation', 5))
@@ -54,7 +58,7 @@ export class OrderHandler extends Construct {
       targets: [
         new SfnStateMachine(sm, {
           input: RuleTargetInput.fromObject({
-            'order.$': '$.detail',
+            order: EventField.fromPath('$.detail'),
           }),
         }),
       ],
